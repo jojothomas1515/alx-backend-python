@@ -2,10 +2,10 @@
 """Module."""
 
 # The types of the elements of the input are not know
-from typing import Sequences, Any, Union
+from typing import Sequence, Any, Union
 
 
-def safe_first_element(lst: Sequences[Any]) -> Union[Any, None]:
+def safe_first_element(lst: Sequence[Any]) -> Union[Any, None]:
     """Safe first element for."""
     if lst:
         return lst[0]
