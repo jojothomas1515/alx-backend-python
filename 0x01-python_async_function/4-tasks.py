@@ -17,8 +17,7 @@ async def task_wait_n(n: int, max_delay: int) -> List[float]:
         max_delay: maximum delay wait_random can sleep for.
     Return: list of all delays.
     """
-    tasks = [asyncio.create_task(task_wait_random(max_delay))
-             for _ in range(n)]
+    tasks = [task_wait_random(max_delay) for _ in range(n)]
 
     result: List[Union[float, int]] = []
     for t in asyncio.as_completed(tasks):
