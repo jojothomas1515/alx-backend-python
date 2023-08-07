@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Module for functions that performs cuccurent operation."""
-from typing import List
 import asyncio
+from typing import List
+
 
 task_wait_random = __import__('3-tasks').task_wait_random
 
