@@ -1,6 +1,5 @@
 # Unittesting in python
 # mocking objects and properties
-# 
-    The difference between unit and integration tests.
-    Common testing patterns such as mocking, parametrizations and fixtures
+# The difference between unit and integration tests.
+# Common testing patterns such as mocking, parametrizations and fixtures
 
