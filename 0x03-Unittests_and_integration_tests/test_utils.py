@@ -2,10 +2,8 @@
 """Test module for the util module."""
 
 from unittest import TestCase, mock
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from parameterized import parameterized
-import fixtures
-import requests
 
 
 class TestAccessNestedMap(TestCase):
@@ -53,3 +51,25 @@ class TestGetJson(TestCase):
                         return_value=mock_with_json,) as mocked:
             self.assertEqual(get_json(test_url), expected)
             mocked.assert_called_once_with(test_url)
+
+
+class TestMemoize(TestCase):
+    """Test the memoize method."""
+
+    def test_memoize(self):
+        """Check if test_memoize decorator works well."""
+        class TestClass:
+
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        with mock.patch.object(TestClass, "a_method",
+                               return_value=42) as mocked:
+            test_m = TestClass()
+            self.assertEqual(test_m.a_property, 42)
+            self.assertEqual(test_m.a_property, 42)
+            mocked.assert_called_once()
