@@ -18,3 +18,11 @@ class TestGithubOrgClient(unittest.TestCase):
         n_org = GithubOrgClient(org)
         self.assertEqual(n_org.org, TEST_PAYLOAD)
         mocked.assert_called_once()
+
+    @mock.patch("client.GithubOrgClient._public_repos_url",
+                new_callable=mock.PropertyMock,
+                return_value="jojothomas.repo")
+    def test_public_repos_url(self, mocked):
+        """Test public repo."""
+        self.assertEqual(GithubOrgClient("abc")._public_repos_url,
+                         "jojothomas.repo")
