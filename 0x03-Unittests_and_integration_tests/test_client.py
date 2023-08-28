@@ -26,3 +26,17 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test public repo."""
         self.assertEqual(GithubOrgClient("abc")._public_repos_url,
                          "jojothomas.repo")
+
+    payload = {"payload": True}
+
+    @mock.patch("client.get_json", return_value=TEST_PAYLOAD[0][1])
+    def test_public_repos(self, mocked: mock.Mock):
+        """Test public repos."""
+        with mock.patch("client.GithubOrgClient._public_repos_url",
+                        new_callable=mock.PropertyMock,
+                        return_value="http://jojothomas.repo") as mk:
+
+            self.assertEqual(GithubOrgClient("abc").public_repos(
+                "bsd-3-clause"), ['episodes.dart'])
+            mk.assert_called_once()
+        mocked.assert_called_once()
