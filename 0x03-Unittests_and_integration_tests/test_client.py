@@ -6,6 +6,7 @@ from unittest import mock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
+from unittest.mock import patch
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -27,10 +28,10 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(GithubOrgClient("abc")._public_repos_url,
                          "jojothomas.repo")
 
-    @mock.patch("client.get_json", return_value=TEST_PAYLOAD[0][1])
-    @mock.patch("client.GithubOrgClient._public_repos_url",
-                new_callable=mock.PropertyMock,
-                return_value="http://jojothomas.com")
+    @patch("client.get_json", return_value=TEST_PAYLOAD[0][1])
+    @patch("client.GithubOrgClient._public_repos_url",
+           new_callable=mock.PropertyMock,
+           return_value="http://jojothomas.com")
     def test_public_repos(self, mocked: mock.Mock, mk: mock.Mock):
         """Test public repos."""
 
