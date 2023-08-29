@@ -10,6 +10,7 @@ from fixtures import TEST_PAYLOAD
 from unittest.mock import (
     patch,
     Mock)
+import requests
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -84,6 +85,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     def test_dummy(self):
         """Dummy test."""
+        print(requests.get)
         self.assertEqual(1, 1)
 
     @classmethod
