@@ -3,7 +3,7 @@
 
 import unittest
 from unittest import mock
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
@@ -49,3 +49,38 @@ class TestGithubOrgClient(unittest.TestCase):
         """Testing the has license static method."""
         self.assertEqual(GithubOrgClient.has_license(
             repo, license_key), expected)
+
+
+@parameterized_class([{
+    "org_payload": TEST_PAYLOAD[0][0],
+    "repos_payload":TEST_PAYLOAD[0][1],
+    "expected_repos":TEST_PAYLOAD[0][2],
+    "apache2_repos":TEST_PAYLOAD[0][3]
+}])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for public repos method."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Preparation class method."""
+
+        def side_effect(url):
+            """side effect."""
+            if url == "https://api.github.com/orgs/google":
+                return mock.Mock(**{"json.return_value": cls.org_payload})
+            elif url == "https://api.github.com/orgs/google/repos":
+                return mock.Mock(**{"json.return_value": cls.repos_payload})
+            else:
+                return mock.Mock(**{"json.return_value": []})
+
+        cls.get_patcher: mock.Mock = mock.patch("requests.get").start()
+        cls.get_patcher.side_effect = side_effect
+
+    def test_dummy(self):
+        """Dummy test."""
+        self.assertEqual(1, 1)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Cleanup class method."""
+        cls.get_patcher.stop()
