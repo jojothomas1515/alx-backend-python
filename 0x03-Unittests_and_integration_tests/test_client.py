@@ -2,27 +2,30 @@
 """Test module for client module."""
 
 import unittest
-from unittest import mock
-from parameterized import parameterized, parameterized_class
+from parameterized import (
+    parameterized,
+    parameterized_class)
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
-from unittest.mock import patch
+from unittest.mock import (
+    patch,
+    Mock)
 
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test the github org client."""
 
     @parameterized.expand([("google",), ("abc",)])
-    @mock.patch("client.get_json", return_value=TEST_PAYLOAD)
-    def test_org(self, org: str, mocked: mock.Mock) -> None:
+    @patch("client.get_json", return_value=TEST_PAYLOAD)
+    def test_org(self, org: str, mocked: Mock) -> None:
         """test that GithubOrgClient.org returns the correct value."""
         n_org = GithubOrgClient(org)
         self.assertEqual(n_org.org, TEST_PAYLOAD)
         mocked.assert_called_once()
 
-    @mock.patch("client.GithubOrgClient._public_repos_url",
-                new_callable=mock.PropertyMock,
-                return_value="jojothomas.repo")
+    @patch("client.GithubOrgClient._public_repos_url",
+           new_callable=mock.PropertyMock,
+           return_value="jojothomas.repo")
     def test_public_repos_url(self, mocked):
         """Test public repo."""
         self.assertEqual(GithubOrgClient("abc")._public_repos_url,
@@ -32,7 +35,7 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch("client.GithubOrgClient._public_repos_url",
            new_callable=mock.PropertyMock,
            return_value="http://jojothomas.com")
-    def test_public_repos(self, mocked: mock.Mock, mk: mock.Mock):
+    def test_public_repos(self, mocked: Mock, mk: Mock):
         """Test public repos."""
 
         self.assertEqual(GithubOrgClient("abc").public_repos(
@@ -68,15 +71,15 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         def side_effect(url):
             """side effect."""
             if url == "https://api.github.com/orgs/google":
-                return mock.Mock(**{"json.return_value": cls.org_payload})
+                return Mock(**{"json.return_value": cls.org_payload})
             elif url == "https://api.github.com/orgs/google/repos":
-                return mock.Mock(**{"json.return_value": cls.repos_payload})
+                return Mock(**{"json.return_value": cls.repos_payload})
             else:
-                return mock.Mock(**{"json.return_value": []})
+                return Mock(**{"json.return_value": []})
 
-        cls.get_patcher: mock.Mock = mock.patch("requests.get",
-                                                autospec=True,
-                                                side_effect=side_effect)
+        cls.get_patcher: Mock = patch("requests.get",
+                                      autospec=True,
+                                      side_effect=side_effect)
         cls.get_patcher.start()
 
     def test_dummy(self):
