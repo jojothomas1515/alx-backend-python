@@ -79,8 +79,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             else:
                 return Mock(**{"json.return_value": []})
 
-        cls.get_patcher: Mock = patch("requests.get",
-                                      side_effect=side_effect)
+        cls.get_patcher: Mock = patch("requests.get")
+        cls.get_patcher.side_effect = side_effect
         cls.get_patcher.start()
 
     @classmethod
