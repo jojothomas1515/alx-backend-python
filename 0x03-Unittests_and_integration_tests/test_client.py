@@ -9,7 +9,8 @@ from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 from unittest.mock import (
     patch,
-    Mock)
+    Mock,
+    PropertyMock)
 import requests
 
 
@@ -25,7 +26,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mocked.assert_called_once()
 
     @patch("client.GithubOrgClient._public_repos_url",
-           new_callable=mock.PropertyMock,
+           new_callable=PropertyMock,
            return_value="jojothomas.repo")
     def test_public_repos_url(self, mocked):
         """Test public repo."""
@@ -34,7 +35,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json", return_value=TEST_PAYLOAD[0][1])
     @patch("client.GithubOrgClient._public_repos_url",
-           new_callable=mock.PropertyMock,
+           new_callable=PropertyMock,
            return_value="http://jojothomas.com")
     def test_public_repos(self, mocked: Mock, mk: Mock):
         """Test public repos."""
@@ -79,14 +80,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 return Mock(**{"json.return_value": []})
 
         cls.get_patcher: Mock = patch("requests.get",
-                                      autospec=True,
                                       side_effect=side_effect)
         cls.get_patcher.start()
-
-    def test_dummy(self):
-        """Dummy test."""
-        print(requests.get)
-        self.assertEqual(1, 1)
 
     @classmethod
     def tearDownClass(cls):
