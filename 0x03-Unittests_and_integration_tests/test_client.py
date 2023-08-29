@@ -74,7 +74,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 return mock.Mock(**{"json.return_value": []})
 
         cls.get_patcher: mock.Mock = mock.patch(
-            "requests.get", side_effect=side_effect).start()
+            "requests.get", side_effect=side_effect)
+        cls.get_patcher.start()
 
     def test_dummy(self):
         """Dummy test."""
