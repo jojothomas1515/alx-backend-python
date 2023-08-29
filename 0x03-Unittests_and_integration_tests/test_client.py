@@ -79,11 +79,16 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             else:
                 return Mock(**{"json.return_value": []})
 
-        cls.get_patcher: Mock = patch("requests.get")
-        cls.get_patcher.side_effect = side_effect
+        cls.get_patcher: Mock = patch("requests.get", side_effect=side_effect)
         cls.get_patcher.start()
 
     @classmethod
     def tearDownClass(cls):
         """Cleanup class method."""
         cls.get_patcher.stop()
+
+    def test_public_repos_with_license(self):
+        """Test repo with license."""
+        hub_instance = GithubOrgClient("google")
+        self.assertEqual(hub_instance.public_repos(license="apache-2.0"),
+                         self.apache2_repos)
