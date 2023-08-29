@@ -28,16 +28,16 @@ class TestGithubOrgClient(unittest.TestCase):
                          "jojothomas.repo")
 
     @mock.patch("client.get_json", return_value=TEST_PAYLOAD[0][1])
-    def test_public_repos(self, mocked: mock.Mock):
+    @mock.patch("client.GithubOrgClient._public_repos_url",
+                new_callable=mock.PropertyMock,
+                return_value="http://jojothomas.com")
+    def test_public_repos(self, mocked: mock.Mock, mk: mock.Mock):
         """Test public repos."""
-        with mock.patch("client.GithubOrgClient._public_repos_url",
-                        new_callable=mock.PropertyMock,
-                        return_value="http://jojothomas.com") as mk:
 
-            self.assertEqual(GithubOrgClient("abc").public_repos(
-                "bsd-3-clause"), ['episodes.dart'])
-            mk.assert_called_once()
-            mocked.assert_called_once()
+        self.assertEqual(GithubOrgClient("abc").public_repos(
+            "bsd-3-clause"), ['episodes.dart'])
+        mk.assert_called_once()
+        mocked.assert_called_once()
 
     expand = [
         ({"license": {"key": "my_license"}}, "my_license", True),
