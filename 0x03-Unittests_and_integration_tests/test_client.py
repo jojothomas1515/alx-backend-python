@@ -66,24 +66,22 @@ class TestGithubOrgClient(unittest.TestCase):
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for public repos method."""
 
-    @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         """Preparation class method."""
 
         def side_effect(url):
             """side effect."""
             if url == "https://api.github.com/orgs/google":
-                return Mock(**{"json.return_value": cls.org_payload})
+                return Mock(**{"json.return_value": self.org_payload})
             elif url == "https://api.github.com/orgs/google/repos":
-                return Mock(**{"json.return_value": cls.repos_payload})
+                return Mock(**{"json.return_value": self.repos_payload})
             else:
                 return Mock(**{"json.return_value": []})
 
-        cls.get_patcher: Mock = patch("requests.get",
-                                      side_effect=side_effect)
-        cls.get_patcher.start()
+        self.get_patcher: Mock = patch("requests.get",
+                                       side_effect=side_effect)
+        self.get_patcher.start()
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(self):
         """Cleanup class method."""
-        cls.get_patcher.stop()
+        self.get_patcher.stop()
